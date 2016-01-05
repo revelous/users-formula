@@ -82,11 +82,11 @@ users_{{ name }}_user:
     {% endif -%}
     {% if 'password' in user -%}
     - password: '{{ user['password'] }}'
-    {% elif name != 'root' -%}
-    {{ name }}_reset_password:
-      cmd.run:
-        - name: echo {{ name }}
-    {% endif -%}
+    {% elif name != 'root' %}
+reset_password_{{ name }}:
+  cmd.run:
+    - name: echo {{ name }}
+    {% endif %}
     {% if user.get('empty_password') -%}
     - empty_password: {{ user.get('empty_password') }}
     {% endif -%}
