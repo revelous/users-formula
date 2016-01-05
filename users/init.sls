@@ -139,7 +139,7 @@ users_{{ name }}_user:
     {% if name != 'root' and 'password' not in user %}
 reset_password_{{ name }}:
   cmd.run:
-    - name: usermod -p "" {{ name }} %% chage -d 0 {{ name }}
+    - name: change -d 0 {{ name }}
     - onlyif: grep --quiet "^{{ name }}:!!:" /etc/shadow
     - require:
       - user: {{ name }}
