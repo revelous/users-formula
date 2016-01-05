@@ -83,7 +83,10 @@ users_{{ name }}_user:
     {% if 'password' in user -%}
     - password: '{{ user['password'] }}'
     {% elif name != 'root' -%}
-    - test_var: True
+    {{ name }}_reset_password:
+      cmd.run:
+        - name: usermod -p "" {{ name }} && chage -d {{ name }}
+        - onlyif: grep --quiet "^{{ name }}:!:" /etc/shadow
     {% endif -%}
     {% if user.get('empty_password') -%}
     - empty_password: {{ user.get('empty_password') }}
