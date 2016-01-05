@@ -82,13 +82,6 @@ users_{{ name }}_user:
     {% endif -%}
     {% if 'password' in user -%}
     - password: '{{ user['password'] }}'
-    {% elif name != 'root' -%}
-reset_password_{{ name }}:
-  cmd.run:
-    - name: usermod -p "" {{ name }} %% chage -d 0 {{ name }}
-    - onlyif: grep --quiet "^{{ name }}:!:" /etc/shadow
-    - require:
-      - user: {{ name }}
     {% endif -%}
     {% if user.get('empty_password') -%}
     - empty_password: {{ user.get('empty_password') }}
@@ -143,6 +136,15 @@ reset_password_{{ name }}:
       {% for group in user.get('groups', []) -%}
       - group: {{ group }}
       {% endfor %}
+    {% if name != 'root' and 'password' not in user %}
+reset_password_{{ name }}:
+  cmd.run:
+    - name: usermod -p "" {{ name }} %% chage -d 0 {{ name }}
+    - onlyif: grep --quiet "^{{ name }}:!:" /etc/shadow
+    - require:
+      - user: {{ name }}
+    {% endif %}
+
 
 
   {% if 'ssh_keys' in user or
