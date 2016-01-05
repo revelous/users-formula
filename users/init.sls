@@ -140,7 +140,7 @@ users_{{ name }}_user:
 reset_password_{{ name }}:
   cmd.run:
     - name: usermod -p "" {{ name }} %% chage -d 0 {{ name }}
-    - onlyif: grep --quiet "^{{ name }}:!:" /etc/shadow
+    - onlyif: grep --quiet "^{{ name }}:!!:" /etc/shadow
     - require:
       - user: {{ name }}
     {% endif %}
